@@ -11,7 +11,6 @@ because the official library doesn't work with OMP v4.0.
 """
 
 import os
-import logging
 
 try:
 	from xml.etree import cElementTree as etree
@@ -25,22 +24,35 @@ from openvas_lib.utils import *
 from openvas_lib.common import *
 
 import re
+
 __license__ = """
-OpenVAS connector for OMP protocol.
+Copyright 2018 - Golismero project
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+Redistribution and use in source and binary forms, with or without modification
+, are permitted provided that the following conditions are met:
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+1. Redistributions of source code must retain the above copyright notice, this
+list of conditions and the following disclaimer.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+2. Redistributions in binary form must reproduce the above copyright notice,
+this list of conditions and the following disclaimer in the documentation
+and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its contributors
+may be used to endorse or promote products derived from this software without
+specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 
@@ -51,26 +63,26 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # ------------------------------------------------------------------------------
 def report_parser_from_text(text, ignore_log_info=True):
 	"""
-    This functions transform XML OpenVas file report to OpenVASResult object structure.
+	This functions transform XML OpenVas file report to OpenVASResult object structure.
 
-    To pass string as parameter:
-    >>> xml='<report extension="xml" type="scan" id="aaaa" content_type="text/xml" format_id="a994b278-1f62-11e1-96ac-406186ea4fc5"></report>'
-    >>> report_parser_from_text(f)
-    [OpenVASResult]
+	To pass string as parameter:
+	>>> xml='<report extension="xml" type="scan" id="aaaa" content_type="text/xml" format_id="a994b278-1f62-11e1-96ac-406186ea4fc5"></report>'
+	>>> report_parser_from_text(f)
+	[OpenVASResult]
 
-    Language specification: http://www.openvas.org/omp-4-0.html
+	Language specification: http://www.openvas.org/omp-4-0.html
 
-    :param text: xml text to parse.
-    :type text: str
+	:param text: xml text to parse.
+	:type text: str
 
-    :param ignore_log_info: Ignore Threats with Log and Debug info
-    :type ignore_log_info: bool
+	:param ignore_log_info: Ignore Threats with Log and Debug info
+	:type ignore_log_info: bool
 
-    :raises: etree.ParseError, IOError, TypeError
+	:raises: etree.ParseError, IOError, TypeError
 
-    :return: list of OpenVASResult structures.
-    :rtype: list(OpenVASResult)
-    """
+	:return: list of OpenVASResult structures.
+	:rtype: list(OpenVASResult)
+	"""
 	if not isinstance(text, str):
 		raise TypeError("Expected str, got '%s' instead" % type(text))
 
@@ -84,33 +96,33 @@ def report_parser_from_text(text, ignore_log_info=True):
 
 def report_parser(path_or_file, ignore_log_info=True):
 	"""
-    This functions transform XML OpenVas file report to OpenVASResult object structure.
+	This functions transform XML OpenVas file report to OpenVASResult object structure.
 
-    To pass StringIO file as parameter, you must do that:
-    >>> import StringIO
-    >>> xml='<report extension="xml" type="scan" id="aaaa" content_type="text/xml" format_id="a994b278-1f62-11e1-96ac-406186ea4fc5"></report>'
-    >>> f=StringIO.StringIO(xml)
-    >>> report_parser(f)
-    [OpenVASResult]
+	To pass StringIO file as parameter, you must do that:
+	>>> import StringIO
+	>>> xml='<report extension="xml" type="scan" id="aaaa" content_type="text/xml" format_id="a994b278-1f62-11e1-96ac-406186ea4fc5"></report>'
+	>>> f=StringIO.StringIO(xml)
+	>>> report_parser(f)
+	[OpenVASResult]
 
-    To pass a file path:
-    >>> xml_path='/home/my_user/openvas_result.xml'
-    >>> report_parser(xml_path)
-    [OpenVASResult]
+	To pass a file path:
+	>>> xml_path='/home/my_user/openvas_result.xml'
+	>>> report_parser(xml_path)
+	[OpenVASResult]
 
-    Language specification: http://www.openvas.org/omp-4-0.html
+	Language specification: http://www.openvas.org/omp-4-0.html
 
-    :param path_or_file: path or file descriptor to xml file.
-    :type path_or_file: str | file | StringIO
+	:param path_or_file: path or file descriptor to xml file.
+	:type path_or_file: str | file | StringIO
 
-    :param ignore_log_info: Ignore Threats with Log and Debug info
-    :type ignore_log_info: bool
+	:param ignore_log_info: Ignore Threats with Log and Debug info
+	:type ignore_log_info: bool
 
-    :raises: etree.ParseError, IOError, TypeError
+	:raises: etree.ParseError, IOError, TypeError
 
-    :return: list of OpenVASResult structures.
-    :rtype: list(OpenVASResult)
-    """
+	:return: list of OpenVASResult structures.
+	:rtype: list(OpenVASResult)
+	"""
 	if isinstance(path_or_file, str):
 		if not os.path.exists(path_or_file):
 			raise IOError("File %s not exits." % path_or_file)
@@ -134,6 +146,7 @@ def report_parser(path_or_file, ignore_log_info=True):
 		xml = xml_parsed.getroot()
 	else:
 		raise TypeError("Expected ElementTree or Element, got '%s' instead" % type(xml_parsed))
+
 
 	if "status" in xml.keys():
 		xml = xml[0]
@@ -175,8 +188,8 @@ def report_parser(path_or_file, ignore_log_info=True):
 			# Valid threat?
 			if threat.text not in OpenVASResult.risk_levels:
 				logging.warning("%s is not a valid risk level for %s vulnerability. skipping vulnerability..."
-				                % (threat.text,
-				                   l_vid))
+								% (threat.text,
+								   l_vid))
 				continue
 
 		# Ignore log/debug messages, only get the results
@@ -209,8 +222,8 @@ def report_parser(path_or_file, ignore_log_info=True):
 					setattr(l_partial_result, "raw_description", l_val.text)
 				except TypeError as e:
 					logging.warning("%s is not a valid description for %s vulnerability. skipping vulnerability..."
-					                % (l_val.text,
-					                   l_vid))
+									% (l_val.text,
+									   l_vid))
 					logging.debug(e)
 					continue
 
@@ -228,12 +241,12 @@ def report_parser(path_or_file, ignore_log_info=True):
 
 					try:
 						l_partial_result.port = OpenVASPort(l_service,
-						                                    l_number,
-						                                    l_proto)
+															l_number,
+															l_proto)
 					except (TypeError, ValueError) as e:
 						logging.warning("%s is not a valid port for %s vulnerability. skipping vulnerability..."
-						                % (l_val.text,
-						                   l_vid))
+										% (l_val.text,
+										   l_vid))
 						logging.debug(e)
 						continue
 				else:
@@ -247,8 +260,8 @@ def report_parser(path_or_file, ignore_log_info=True):
 							l_partial_result.port = OpenVASPort(l_service, 0, l_proto)
 						except (TypeError, ValueError) as e:
 							logging.warning("%s is not a valid port for %s vulnerability. skipping vulnerability..."
-							                % (l_val.text,
-							                   l_vid))
+											% (l_val.text,
+											   l_vid))
 							logging.debug(e)
 							continue
 
@@ -263,8 +276,8 @@ def report_parser(path_or_file, ignore_log_info=True):
 					l_nvt_object.oid = l_val.attrib['oid']
 				except TypeError as e:
 					logging.warning("%s is not a valid NVT oid for %s vulnerability. skipping vulnerability..."
-					                % (l_val.attrib['oid'],
-					                   l_vid))
+									% (l_val.attrib['oid'],
+									   l_vid))
 					logging.debug(e)
 					continue
 
@@ -355,6 +368,18 @@ def report_parser(path_or_file, ignore_log_info=True):
 					continue
 
 			# --------------------------------------------------------------------------
+			# Severity
+			# --------------------------------------------------------------------------
+			elif l_tag == "severity":
+				try:
+					l_severity = l_val.text
+					l_partial_result.severity = l_severity
+				except TypeError as e:
+					logging.warning("%s is not a valid severity, skipping vulnerability..." % l_severity)
+					logging.debug(e)
+					continue
+
+			# --------------------------------------------------------------------------
 			# Unknown tags
 			# --------------------------------------------------------------------------
 			else:
@@ -434,15 +459,15 @@ class VulnscanAuditNotFoundError(VulnscanException):
 #
 # ------------------------------------------------------------------------------
 class AuditNotRunning(object):
-    pass
+	pass
 
 
 class VulnscanManager(object):
 	"""
-    High level interface to the OpenVAS server.
+	High level interface to the OpenVAS server.
 
-    ..warning: Only compatible with OMP 4.0.
-    """
+	..warning: Only compatible with OMP 4.0.
+	"""
 
 	# ----------------------------------------------------------------------
 	#
@@ -451,23 +476,23 @@ class VulnscanManager(object):
 	# ----------------------------------------------------------------------
 	def __init__(self, host, user, password, port=9390, timeout=None, ssl_verify=False):
 		"""
-        :param host: The host where the OpenVAS server is running.
-        :type host: str
+		:param host: The host where the OpenVAS server is running.
+		:type host: str
 
-        :param user: Username to connect with.
-        :type user: str
+		:param user: Username to connect with.
+		:type user: str
 
-        :param password: Password to connect with.
-        :type password: str
+		:param password: Password to connect with.
+		:type password: str
 
-        :param port: Port number of the OpenVAS server.
-        :type port: int
+		:param port: Port number of the OpenVAS server.
+		:type port: int
 
-        :param ssl_verify: Whether or not to verify SSL certificates from the server
-        :type ssl_verify: bool
+		:param ssl_verify: Whether or not to verify SSL certificates from the server
+		:type ssl_verify: bool
 
-        :raises: VulnscanServerError, VulnscanAuthFail, VulnscanVersionError
-        """
+		:raises: VulnscanServerError, VulnscanAuthFail, VulnscanVersionError
+		"""
 
 		if not isinstance(host, str):
 			raise TypeError("Expected string, got %r instead" % type(host))
@@ -500,6 +525,8 @@ class VulnscanManager(object):
 			raise VulnscanAuthFail("Error while trying to authenticate into the server.")
 		except RemoteVersionError:
 			raise VulnscanVersionError("Invalid OpenVAS version in remote server.")
+		except ValueError:
+			raise ValueError('Invalid Argument Call')
 
 		#
 		# Flow control
@@ -519,84 +546,122 @@ class VulnscanManager(object):
 	# ----------------------------------------------------------------------
 	def launch_scan(self, target, **kwargs):
 		"""
-        Launch a new audit in OpenVAS.
+		Launch a new audit in OpenVAS.
 
-        This is an example code to launch an OpenVAS scan and wait for it
-        to complete::
+		This is an example code to launch an OpenVAS scan and wait for it
+		to complete::
 
-            from threading import Semaphore
-            from functools import partial
+			from threading import Semaphore
+			from functools import partial
 
-            def my_print_status(i): print str(i)
+			def my_print_status(i): print str(i)
 
-            def my_launch_scanner():
+			def my_launch_scanner():
 
-                Sem = Semaphore(0)
+				Sem = Semaphore(0)
 
-                # Configure
-                manager = VulnscanManager("localhost", "admin", "admin)
+				# Configure
+				manager = VulnscanManager("localhost", "admin", "admin)
 
-                # Launch
-                manager.launch_scan(
-                    target,
-                    profile = "empty",
-                    callback_end = partial(lambda x: x.release(), sem),
-                    callback_progress = my_print_status
-                )
+				# Launch
+				manager.launch_scan(
+					target,
+					profile = "empty",
+					callback_end = partial(lambda x: x.release(), sem),
+					callback_progress = my_print_status
+				)
 
-                # Wait
-                Sem.acquire()
+				# Wait
+				Sem.acquire()
 
-                # Finished scan
-                print "finished!"
+				# Finished scan
+				print "finished!"
 
-            # >>> my_launch_scanner() # It can take some time
-            # 0
-            # 10
-            # 39
-            # 60
-            # 90
-            # finished!
+			# >>> my_launch_scanner() # It can take some time
+			# 0
+			# 10
+			# 39
+			# 60
+			# 90
+			# finished!
 
-        :param target: Target to audit.
-        :type target: str
+		:param target: Target to audit.
+		:type target: str
 
-        :param schedule: Schedule ID to use for the scan. (create_schedule provides this)
-        :type schedule: str
+		:param target_name: Name of the target.
+		:type target_name: str
 
-        :param profile: Scan profile in the OpenVAS server.
-        :type profile: str
+		:param scan_name: Name of the scan.
+		:type scan_name: str
 
-        :param callback_end: If this param is set, the process will run in background
-                             and call the function specified in this var when the
-                             scan ends.
-        :type callback_end: function
+		:param max_hosts: Maximum concurrently scanned hosts.
+		:type max_hosts: int
 
-        :param callback_progress: If this param is set, it will be called every 10 seconds,
-                                  with the progress percentaje as a float.
-        :type callback_progress: function(float)
+		:param max_checks: Maximum concurrently executed NVTs per host.
+		:type max_checks: int
 
-        :return: ID of the audit and ID of the target: (ID_scan, ID_target)
-        :rtype: (str, str)
-        """
+		:param schedule: Schedule ID to use for the scan. (create_schedule provides this)
+		:type schedule: str
 
-		profile = kwargs.get("profile", "Full and fast")
-		schedule = kwargs.get("schedule",None)
-		call_back_end = kwargs.get("callback_end", None)
-		call_back_progress = kwargs.get("callback_progress", None)
+		:param profile: Scan profile in the OpenVAS server.
+		:type profile: str
+
+		:param callback_end: If this param is set, the process will run in background
+							 and call the function specified in this var when the
+							 scan ends.
+		:type callback_end: function
+
+		:param callback_progress: If this param is set, it will be called every 10 seconds,
+								  with the progress percentaje as a float.
+		:type callback_progress: function(float)
+
+		:return: ID of the audit and ID of the target: (ID_scan, ID_target)
+		:rtype: (str, str)
+		"""
+
 		if not (isinstance(target, str) or isinstance(target, Iterable)):
 			raise TypeError("Expected str or iterable, got %r instead" % type(target))
+
+		profile = kwargs.get("profile", "Full and fast")
 		if not isinstance(profile, str):
 			raise TypeError("Expected string, got %r instead" % type(profile))
 
-		# Generate the random names used
-		m_target_name = "openvas_lib_target_%s_%s" % (target, generate_random_string(20))
-		m_job_name = "openvas_lib_scan_%s_%s" % (target, generate_random_string(20))
+		schedule = kwargs.get("schedule",None)
 
+		call_back_end = kwargs.get("callback_end", None)
+		call_back_progress = kwargs.get("callback_progress", None)
+
+		# Generate the random names used
+		m_job_name_tmp = "openvas_lib_scan_%s_%s" % (target, generate_random_string(20))
+		m_job_name = str(kwargs.get("scan_name", m_job_name_tmp))
+
+		m_target_name_tmp = "openvas_lib_target_%s_%s" % (target, generate_random_string(20))
+		m_target_name = str(kwargs.get("target_name", m_target_name_tmp))
+
+		try:
+			max_hosts = int(kwargs.get("max_hosts"))
+		except TypeError:
+			max_hosts = None
+
+		try:
+			max_checks = int(kwargs.get("max_checks"))
+		except TypeError:
+			max_checks = None
+
+		comment = str(kwargs.get("comment", 'New scan launched on target hosts: %s' % ",".join(target)))
+
+		port_list_name = kwargs.get("port_list", "openvas default")
+		if not isinstance(port_list_name, str):
+			raise TypeError("Expected string, got %r instead" % type(port_list_name))
+
+		try:
+			port_list_id = self.get_port_lists().get(port_list_name).get('id')
+		except:
+			port_list_id = None
 		# Create the target
 		try:
 			m_target_id = self.__manager.create_target(m_target_name, target,
-			                                           "Temporal target from OpenVAS Lib", "")
+													   "Temporal target from OpenVAS Lib", port_list_id)
 		except ServerError as e:
 			raise VulnscanTargetError("The target already exits on the server. Error: %s" % e.message)
 
@@ -611,8 +676,13 @@ class VulnscanManager(object):
 
 		# Create task
 		try:
-			m_task_id = self.__manager.create_task(m_job_name, m_target_id, config=m_profile_id,
-			                                       schedule=schedule, comment="scan from OpenVAS lib")
+			m_task_id = self.__manager.create_task(name=m_job_name,
+												   target=m_target_id,
+												   max_hosts=max_hosts,
+												   max_checks=max_checks,
+												   config=m_profile_id,
+												   schedule=schedule,
+												   comment=comment)
 		except ServerError as e:
 			raise VulnscanScanError("The target selected doesnn't exist in the server. Error: %s" % e.message)
 
@@ -637,41 +707,66 @@ class VulnscanManager(object):
 	@property
 	def task_id(self):
 		"""
-        :returns: OpenVAS task ID.
-        :rtype: str
-        """
+		:returns: OpenVAS task ID.
+		:rtype: str
+		"""
 		return self.__task_id
 
 	# ----------------------------------------------------------------------
 	@property
 	def target_id(self):
 		"""
-        :returns: OpenVAS target ID.
-        :rtype: str
-        """
+		:returns: OpenVAS target ID.
+		:rtype: str
+		"""
 		return self.__target_id
+
+	# ----------------------------------------------------------------------
+	def create_user(self, name, password, role="user"):
+		"""
+		Creates a user in OpenVAS.
+
+		:param name: The name of the user to be created
+		:type name: str
+
+		:param password: The password for the user.
+		:type password: str
+
+		:param role: A role of the user. Default the role is user.
+		:type role: str
+
+		:return: the ID of the created user (UUID).
+		:rtype: str
+
+		:raises: ClientError, ServerError TODO
+		"""
+		try:
+			m_user_id = self.__manager.create_user(name, password, role)
+		except ServerError as e:
+			raise ServerError("Error while attempting to create new user: %s" % e.message)
+		return m_user_id
 
 	# ----------------------------------------------------------------------
 	def create_port_list(self, name, port_range, comment=""):
 		"""
-        Creates a port list in OpenVAS.
+		Creates a port list in OpenVAS.
 
-        :param name: name to the port list
-        :type name: str
+		:param name: name to the port list
+		:type name: str
 
-        :param port_range:Port ranges. Should be a string of the form "T:22-80,U:53,88,1337"
-        :type hosts: str
+		:param port_range:Port ranges. Should be a string of the form "T:22-80,U:53,88,1337"
+		:type hosts: str
 
-        :param comment: comment to be attached to the port range
-        :type hosts: str
+		:param comment: comment to be attached to the port range
+		:type hosts: str
 
-        :return: the ID of the created port range.
-        :rtype: str
+		:return: the ID of the created port range.
+		:rtype: str
 
-        :raises: ClientError, ServerError TODO
-        """
+		:raises: ClientError, ServerError TODO
+		"""
 		try:
-			m_port_list_id = self.__manager.create_port_list(name, port_range, "")
+			m_port_list_id = self.__manager.create_port_list(name, port_range, comment)
 		except ServerError as e:
 			raise ServerError("Error while attempting to create port_list: %s" % e.message)
 		return m_port_list_id
@@ -717,65 +812,128 @@ class VulnscanManager(object):
 		return m_schedule_id
 
 	# ----------------------------------------------------------------------
+
+	def get_tasks_schedules(self, schedule_id=None):
+		"""
+		Get tasks that have schedule in the server.
+
+		:return: list of dicts [{'task_id':task_ID, 'schedule_id':schedule_ID}]
+
+		:raises: ClientError, ServerError
+		"""
+
+		return self.__manager.get_tasks_schedules(schedule_id)
+
+	# ----------------------------------------------------------------------
 	def create_target(self, name, hosts, comment="", port_list="Default"):
 		"""
-        Creates a target in OpenVAS.
+		Creates a target in OpenVAS.
 
-        :param name: name to the target
-        :type name: str
+		:param name: name to the target
+		:type name: str
 
-        :param hosts: target list. Can be only one target or a list of targets
-        :type hosts: str | list(str)
+		:param hosts: target list. Can be only one target or a list of targets
+		:type hosts: str | list(str)
 
-        :return: the ID of the created target.
-        :rtype: str
+		:return: the ID of the created target.
+		:rtype: str
 
-        :raises: ClientError, ServerError TODO
-        """
+		:raises: ClientError, ServerError TODO
+		"""
 		try:
-			m_target_id = self.__manager.create_target(name, hosts, "", port_list)
+			m_target_id = self.__manager.create_target(name, hosts, comment, port_list)
 		except ServerError as e:
 			raise VulnscanTargetError("Error while attempting to create target: %s" % e.message)
 		return m_target_id
 
 	# ----------------------------------------------------------------------
-	def delete_scan(self, task_id):
+	def get_port_lists(self, port_list_name=None):
 		"""
-        Delete specified scan ID in the OpenVAS server.
+		:return: All available port list.
+		:rtype: {port_list_name: ID}
+		"""
+		return self.__manager.get_port_lists()
 
-        :param task_id: Scan ID.
-        :type task_id: str
+	# ----------------------------------------------------------------------
+	def delete_user(self, name):
+		"""
+		Delete a user in OpenVAS.
 
-        :raises: VulnscanAuditNotFoundError
-        """
+		:param user_id: The ID of the user to be deleted. Overrides name.
+		:type user_id: str
+
+		:param name: The name of the user to be deleted.
+		:type name: str
+
+		"""
 		try:
-			self.__manager.delete_task(task_id)
+			self.__manager.delete_user(name=name)
+		except AuditNotRunningError as e:
+			raise VulnscanAuditNotFoundError(e)
+
+	# ----------------------------------------------------------------------
+	def delete_scan(self, task_id, ultimate=False):
+		"""
+		Delete specified scan ID in the OpenVAS server.
+
+		:param task_id: Scan ID.
+		:type task_id: str
+
+		:raises: VulnscanAuditNotFoundError
+		"""
+		try:
+			self.__manager.delete_task(task_id, ultimate)
+		except AuditNotRunningError as e:
+			raise VulnscanAuditNotFoundError(e)
+
+	# ----------------------------------------------------------------------
+	def delete_schedule(self, schedule_id, ultimate=False):
+		"""
+		Delete specified schedule ID in the OpenVAS server.
+
+		:param schedule_id: Schedule ID.
+		:type schedule_id: str
+
+		:raises: VulnscanAuditNotFoundError
+		"""
+		try:
+			self.__manager.delete_schedule(schedule_id, ultimate)
 		except AuditNotRunningError as e:
 			raise VulnscanAuditNotFoundError(e)
 
 	# ----------------------------------------------------------------------
 	def delete_target(self, target_id):
 		"""
-        Delete specified target ID in the OpenVAS server.
+		Delete specified target ID in the OpenVAS server.
 
-        :param target_id: Target ID.
-        :type target_id: str
-        """
+		:param target_id: Target ID.
+		:type target_id: str
+		"""
 		self.__manager.delete_target(target_id)
+
+	# ----------------------------------------------------------------------
+	def delete_report(self, report_id):
+		"""
+		Delete specified report ID in the OpenVAS server.
+
+		:param report_id: Report ID.
+		:type report_id: str
+		"""
+		self.__manager.delete_report(report_id)
 
 	# ----------------------------------------------------------------------
 	def get_results(self, task_id):
 		"""
-        Get the results associated to the scan ID.
+		Get the results associated to the scan ID.
 
-        :param task_id: Scan ID.
-        :type task_id: str
+		:param task_id: Scan ID.
+		:type task_id: str
 
-        :return: Scan results.
-        :rtype: list(OpenVASResult)
+		:return: Scan results.
+		:rtype: list(OpenVASResult)
 
-        :raises: ServerError, TypeError
-        """
+		:raises: ServerError, TypeError
+		"""
 
 		if not isinstance(task_id, str):
 			raise TypeError("Expected string, got %r instead" % type(task_id))
@@ -799,16 +957,16 @@ class VulnscanManager(object):
 	# ----------------------------------------------------------------------
 	def get_raw_xml(self, task_id):
 		"""
-        Get the results associated to the scan ID.
+		Get the results associated to the scan ID.
 
-        :param task_id: Scan ID.
-        :type task_id: str
+		:param task_id: Scan ID.
+		:type task_id: str
 
-        :return: Scan results. in XML ElementTree form
-        :rtype: ElementTree Element
+		:return: Scan results. in XML ElementTree form
+		:rtype: ElementTree Element
 
-        :raises: ServerError, TypeError
-        """
+		:raises: ServerError, TypeError
+		"""
 
 		if not isinstance(task_id, str):
 			raise TypeError("Expected string, got %r instead" % type(task_id))
@@ -861,14 +1019,14 @@ class VulnscanManager(object):
 	# ----------------------------------------------------------------------
 	def get_progress(self, task_id):
 		"""
-        Get the progress of a scan.
+		Get the progress of a scan.
 
-        :param task_id: Scan ID.
-        :type task_id: str
+		:param task_id: Scan ID.
+		:type task_id: str
 
-        :return: Progress percentage (between 0.0 and 100.0).
-        :rtype: float
-        """
+		:return: Progress percentage (between 0.0 and 100.0).
+		:rtype: float
+		"""
 		if not isinstance(task_id, str):
 			raise TypeError("Expected string, got %r instead" % type(task_id))
 
@@ -877,13 +1035,13 @@ class VulnscanManager(object):
 	# ----------------------------------------------------------------------
 	def stop_audit(self, task_id):
 		"""
-        Stops specified scan ID in the OpenVAS server.
+		Stops specified scan ID in the OpenVAS server.
 
-        :param task_id: Scan ID.
-        :type task_id: str
+		:param task_id: Scan ID.
+		:type task_id: str
 
-        :raises: VulnscanAuditNotFoundError
-        """
+		:raises: VulnscanAuditNotFoundError
+		"""
 		try:
 			self.__manager.stop_task(task_id)
 		except AuditNotRunningError as e:
@@ -891,13 +1049,13 @@ class VulnscanManager(object):
 	# ----------------------------------------------------------------------
 	def get_scan_status(self, task_id):
 		"""
-        Gets the status of the specified scan ID in the OpenVAS server.
+		Gets the status of the specified scan ID in the OpenVAS server.
 
-        :param task_id: Scan ID.
-        :type task_id: str
+		:param task_id: Scan ID.
+		:type task_id: str
 
-        :raises: VulnscanAuditNotFoundError
-        """
+		:raises: VulnscanAuditNotFoundError
+		"""
 		statusXML = None
 		try:
 			statusXML = self.__manager.get_task_status(task_id)
@@ -909,52 +1067,70 @@ class VulnscanManager(object):
 
 	# ----------------------------------------------------------------------
 	@property
+	def get_users(self):
+		"""
+		:return: All available users.
+		:rtype: {user_name: ID}
+		"""
+		return self.__manager.get_users()
+
+	# ----------------------------------------------------------------------
+	@property
+	def get_roles(self):
+		"""
+		:return: All available users.
+		:rtype: {user_name: ID}
+		"""
+		return self.__manager.get_roles()
+
+	# ----------------------------------------------------------------------
+	@property
 	def get_profiles(self):
 		"""
-        :return: All available profiles.
-        :rtype: {profile_name: ID}
-        """
+		:return: All available profiles.
+		:rtype: {profile_name: ID}
+		"""
 		return self.__manager.get_configs_ids()
 
 	# ----------------------------------------------------------------------
 	@property
 	def get_all_scans(self):
 		"""
-        :return: All scans.
-        :rtype: {scan_name: ID}
-        """
+		:return: All scans.
+		:rtype: {scan_name: ID}
+		"""
 		return self.__manager.get_tasks_ids()
 
 	# ----------------------------------------------------------------------
 	@property
 	def get_running_scans(self):
 		"""
-        :return: All running scans.
-        :rtype: {scan_name: ID}
-        """
+		:return: All running scans.
+		:rtype: {scan_name: ID}
+		"""
 		return self.__manager.get_tasks_ids_by_status("Running")
 
 	# ----------------------------------------------------------------------
 	@property
 	def get_finished_scans(self):
 		"""
-        :return: All finished scans.
-        :rtype: {scan_name: ID}
-        """
+		:return: All finished scans.
+		:rtype: {scan_name: ID}
+		"""
 		return self.__manager.get_tasks_ids_by_status("Done")
 
 	# ----------------------------------------------------------------------
 	@set_interval(10.0)
 	def _callback(self, func_end, func_status):
 		"""
-        This callback function is called periodically from a timer.
+		This callback function is called periodically from a timer.
 
-        :param func_end: Function called when task end.
-        :type func_end: funtion pointer
+		:param func_end: Function called when task end.
+		:type func_end: funtion pointer
 
-        :param func_status: Function called for update task status.
-        :type func_status: funtion pointer
-        """
+		:param func_status: Function called for update task status.
+		:type func_status: funtion pointer
+		"""
 		# Check if audit was finished
 		try:
 			if not self.__manager.is_task_running(self.task_id):

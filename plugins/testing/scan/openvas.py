@@ -459,7 +459,7 @@ class OpenVASPlugin(TestingPlugin):
 
                 # Prepare the vulnerability properties.
                 kwargs = {
-                    "title":        name,
+                    "title":        "%s;;;%s" % (name, str(opv.port.port_name)),
                     "description":  description,
                     "references":   references,
                     "level":        level,
